@@ -1,0 +1,23 @@
+.listContainer{
+    display: flex;
+    width: 25%;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0 0 0;
+    height: 30px;
+}
+.listTodo{
+    max-width: 80%;
+    word-wrap: break-word;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+}
+.listDeletBtn{
+    padding: 0;
+    height: 35px;
+    width: 30px;
+    font-size: 25px;
+    background-color: transparent;
+    border: none;
+    color: white;
+}

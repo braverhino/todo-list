@@ -1,0 +1,26 @@
+form{
+    width: 25%;
+}
+.form_container{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.addTodo_input{
+    margin: 0;
+    width: 80%;
+    padding: 10px 10px;
+    border: 1px solid white;
+    border-radius: 8px;
+    color: white;
+    background-color: transparent;
+}
+.addTodo_button{
+    background-color: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 40px;
+}
