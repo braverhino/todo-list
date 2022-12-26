@@ -7,7 +7,22 @@
     height: 30px;
 }
 .listTodo{
-    max-width: 80%;
+    background-color: rgb(255 254 254 / 16%);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    width: 75%;
+    padding: 5px;
+    vertical-align:middle;
+    word-wrap: break-word;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+}
+.listTodo-disabled{
+    background-color: transparent;
+    border: none;
+    color: white;
+    width: 75%;
     word-wrap: break-word;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 20px;
@@ -17,7 +32,9 @@
     height: 35px;
     width: 30px;
     font-size: 25px;
+    margin-left: 10px;
     background-color: transparent;
     border: none;
     color: white;
+    cursor: pointer;
 }

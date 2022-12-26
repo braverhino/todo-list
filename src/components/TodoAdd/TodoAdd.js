@@ -3,12 +3,13 @@ import { db } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
 import './TodoAdd.css';
 
-function TodoAdd({getTodos, name, setName}) {
+function TodoAdd({getTodos, name, setName, user}) {
   const collectionTodo = collection(db, 'todos')
   const handleSubmit = async (event) => {
     event.preventDefault();
     if(name != ''){
       await addDoc(collectionTodo, {
+        uid: user.uid,
         todo: name,
         status: false,
       }).then(() => setName(''))

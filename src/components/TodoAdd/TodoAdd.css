@@ -23,4 +23,10 @@ form{
     border: none;
     color: #ffffff;
     font-size: 40px;
+    padding: 0 10px;
+}
+.addTodo_button:hover{
+    background-color: #3e434f;
+    cursor: pointer;
+    border-radius: 5px;
 }

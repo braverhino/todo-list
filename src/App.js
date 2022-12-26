@@ -1,54 +1,78 @@
-import { async } from '@firebase/util';
-import { collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
-import React, {useEffect, useState} from 'react';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import Header from './components/Header/Header';
-import List from './components/List/List';
-import TodoAdd from './components/TodoAdd/TodoAdd';
-import { db } from './firebase';
+import TodoApp from './components/TodoApp/TodoApp';
+import { auth } from './firebase';
+import Login from './components/Login/Login';
 
 function App() {
-  const [todo, setTodo] = useState([])
-  const [name, setName] = useState('')
-  const getTodos = async () => {
-    const data = await getDocs(collection(db, 'todos'));
-    setTodo(data.docs.map(doc => ({
-      ...doc.data(),
-      id: doc.id
-    })))
-  }
-  const deleteTodo = async (id) => {
-    const todoDoc = doc(db, 'todos', id);
-    deleteDoc(todoDoc).then(() => getTodos())
-  }
-  // const editTodo = async (id) => {
-  //   const todoDoc = doc(db, 'todos', id);
-  //   await updateDoc(todoDoc, {todo: 'updated'})
-  // }
-  useEffect( () => {
-     getTodos().catch(err => {
-      console.log(err)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
     })
-  }, []);
+  }, [])
 
+  const register = async () => {
+    if(email != '' && password != ''){
+      try{
+        await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        )
+        setEmail('');
+        setPassword('')
+      } catch(e){
+        alert(e)
+      }
+      await signout(auth)
+    }
+    
+  }
+  const login = async () => {
+    if(email != '' && password != ''){
+      try{
+        console.log(email, password)
+        const currentUser = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        )
+        await setUser(currentUser)
+        setEmail('');
+        setPassword('')
+      } catch(e){
+          alert(e)
+      }
+      
+    }
 
-  return (
-    <div className="App-container">
-        <Header/>
-        <TodoAdd getTodos={getTodos()} name={name} setName={setName}/>
-        {
-          todo.map((i) => {
-            return (
-            <List
-              todo={i}
-              key={i.id}
-              deleteTodo={deleteTodo}
-              // editTodo={editTodo}
-            />)
-          })
-        }
-      </div>
-  );
+  }
+  const signout = async () => {
+    await signOut(auth)
+  }
+
+  return(
+    <>
+      {
+        user ? 
+          <TodoApp signOut={() => signout} user={user}/>
+        : 
+          <Login 
+            email={email}
+            password={password}
+            setEmail={setEmail}
+            setPassword={setPassword}
+            login={login}
+            register={register}/>
+      }
+    </>
+  )
+  
 }
 
 export default App;
