@@ -1,5 +1,5 @@
 form{
-    width: 25%;
+    min-width: 300px;
 }
 .form_container{
     margin: 0;
@@ -24,6 +24,7 @@ form{
     color: #ffffff;
     font-size: 40px;
     padding: 0 10px;
+    
 }
 .addTodo_button:hover{
     background-color: #3e434f;

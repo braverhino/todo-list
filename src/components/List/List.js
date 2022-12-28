@@ -30,11 +30,10 @@ function List({todo, deleteTodo, editTodo}) {
                 <img src={edit} width={30}/>
             </label>
             : 
-            <button style={{backgroundColor: 'transparent', border: 'none'}} onClick={() => {
+            <button style={{backgroundColor: 'transparent', border: 'none', cursor: 'pointer'}} onClick={() => {
               setDisabled(true)
               if(newtodo !== todo.todo){
                 editTodo(todo.id, newtodo)
-                alert('changed')
               }
             }}><img src={accept}  width={30}/></button>
         }

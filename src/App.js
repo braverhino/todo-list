@@ -4,7 +4,7 @@ import './App.css';
 import TodoApp from './components/TodoApp/TodoApp';
 import { auth } from './firebase';
 import Login from './components/Login/Login';
-
+// TODO when add data 
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,7 +42,8 @@ function App() {
           email,
           password
         )
-        await setUser(currentUser)
+        console.log(currentUser);
+        setUser(currentUser.user)
         setEmail('');
         setPassword('')
       } catch(e){

@@ -1,24 +1,28 @@
 import React from "react";
 import { db } from "../../firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, Firestore } from "firebase/firestore";
 import './TodoAdd.css';
 
-function TodoAdd({getTodos, name, setName, user}) {
+function TodoAdd({getTodos, name, setName, user, todo, setTodo}) {
   const collectionTodo = collection(db, 'todos')
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if(name != ''){
-      await addDoc(collectionTodo, {
-        uid: user.uid,
+    const payload = {
+        createdAt: Date.now(),
         todo: name,
+        uid: user.uid,
         status: false,
-      }).then(() => setName(''))
-      .then(() => getTodos);
+    } 
+    if(name !== ''){
+      setTodo([...todo, payload])
+      await addDoc(collectionTodo, payload);
+      setName('');
     }
     
   }
+  
   return (
-    <form onSubmit={(e) => handleSubmit(e)}>
+    <form onSubmit={handleSubmit}>
         <div className="form_container">
           <input 
             type={"text"}

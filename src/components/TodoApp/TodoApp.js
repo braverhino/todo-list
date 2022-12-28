@@ -17,36 +17,46 @@ const TodoApp = ({signOut, user}) => {
     })))
   }
   const deleteTodo = async (id) => {
+    const newtodos = todo.filter((item) => {
+      console.log(item.todo + '(' , item.id, ')', '|', id);
+      return item.id !== id;
+    })
+    setTodo(newtodos);
     const todoDoc = doc(db, 'todos', id);
-    deleteDoc(todoDoc).then(() => getTodos())
+    await deleteDoc(todoDoc).catch(err => console.log(err));
+    
   }
   const editTodo = async (id, newtodo) => {
-    console.log(id, newtodo)
     const todoDoc = doc(db, 'todos', id);
     await updateDoc(todoDoc, {todo: newtodo})
-
   }
   useEffect( () => {
-     getTodos().catch(err => {
+      getTodos().catch(err => {
       console.log(err)
     })
   }, []);
-  
+  const sortedTodo = [...todo].sort((a, b) => b.createdAt - a.createdAt);
+  console.log(todo);
   return (
     <div className="App-container">
         <Header/>
         <button onClick={signOut()} className={'signOut-btn'}>Sign out</button>
         <br/>
-        <TodoAdd getTodos={getTodos()} name={name} setName={setName} user={user}/>
+        <TodoAdd getTodos={getTodos} name={name} setName={setName} user={user} setTodo={setTodo} todo={todo}/>
         {
-          todo.map((i) => {
+          sortedTodo.map((i) => {
+            console.log(user.uid, i.uid);
             if(user.uid === i.uid){
               return (
-                <List
-                  todo={i}
-                  deleteTodo={deleteTodo}
-                  editTodo={editTodo}
-                />
+                <div key={i.id}>
+                  <List
+                    todo={i}
+                    deleteTodo={deleteTodo}
+                    editTodo={editTodo}
+                  />
+                </div>
+                  
+                
             )
             }
           })
