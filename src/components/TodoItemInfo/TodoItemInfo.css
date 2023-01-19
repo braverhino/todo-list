@@ -1,0 +1,29 @@
+.todo-modal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: flex-end;
+    z-index: 5;
+}
+.todo-modal-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px 20px 0 20px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    color: #000;
+    width: 100%;
+    height: 200px;
+    overflow-y: scroll;
+    position: relative;
+}
+.todo-modal-container{
+    width: 290px;
+    border: 1px solid #000;
+}

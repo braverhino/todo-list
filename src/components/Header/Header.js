@@ -1,10 +1,10 @@
 import React from "react";
 import './Header.css';
 
-function Header() {
+function Header({header}) {
   return (
     <div className="headerContainer">
-      <h1>Todo App</h1>
+      <h1>{header}</h1>
     </div>
   );
 }

@@ -1,10 +1,25 @@
+.main-buttons{
+    display: flex;
+    align-items: center;
+}
+.action-btn{
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    border: none;
+    padding: 4px 8px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+.action-btn:hover{
+    background-color: rgba(255, 255, 255, 0.854);
+}
 .signOut-btn{
     cursor: pointer;
     background-color: transparent;
     color: white;
     border: 1px solid white;
     padding: 10px 20px;
-    border-radius: 5px
+    border-radius: 5px;
 }
 .signOut-btn:hover{
     background-color: #3e434f;

@@ -1,0 +1,23 @@
+.createContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.todolist-name-input{
+    margin-top: 30px;
+    background-color: transparent;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: white;
+    width: 100%;
+}
+.todolist-name-btn{
+    margin-top: 10px;
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    cursor: pointer;
+    padding: 5px 15px;
+    border-radius: 5px;
+}

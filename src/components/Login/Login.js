@@ -8,11 +8,11 @@ const Login = ({password, setPassword, email, setEmail, register, login}) => {
             <form onSubmit={(e) => e.preventDefault()} className={'list_form'}>
                 <label for={'email'} style={{color: 'white'}}>Email address</label>
                 <input 
-                type="email"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-                id={'email'}
-                className="login__input"
+                    type="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                    id={'email'}
+                    className="login__input"
                 />
                 <br/>
                 <label for={'password'} style={{color: 'white'}}>Password</label>

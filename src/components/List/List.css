@@ -3,7 +3,11 @@
     justify-content: space-between;
     align-items: center;
     margin: 20px 0 0 0;
+    padding: 0 5px 10px 5px;
     height: 30px;
+    width: 290px;
+    border-bottom: 1px solid #808080;
+    position: relative;
 }
 .listTodo{
     background-color: rgb(255 254 254 / 16%);
@@ -26,7 +30,7 @@
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 20px;
 }
-.listDeletBtn{
+/* .listDeletBtn{
     padding: 0;
     height: 35px;
     width: 30px;
@@ -36,4 +40,33 @@
     border: none;
     color: white;
     cursor: pointer;
+} */
+.editBtn{
+    vertical-align: middle;
+    position: absolute;
+    right: 0;
+}
+.checkboxNNN{
+    display: none;
+}
+.labelNNN{
+    padding-left: 10px;
+
+}
+.labelNNN::before{
+    content: '';
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background-color: transparent;
+    border: 2px solid #808080;
+    vertical-align: middle;
+    margin-left: -10px;
+    margin-right: 15px;
+    border-radius: 50%;
+}
+.checkboxNNN:checked + label::before{
+    content: '';
+    background-size: 100%;
+    background-image: url('/Users/macuser/Documents/todoapp/src/assets/accept.svg');
 }
