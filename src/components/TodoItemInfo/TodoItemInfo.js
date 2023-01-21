@@ -1,45 +1,59 @@
 import React from "react";
 import { useState } from "react";
 import './TodoItemInfo.css'
-const TodoItemInfo = ({todo, setShowTodoInfo}) => {
+import check from '../../assets/check.png'
+import edit from '../../assets/edit.png'
+const TodoItemInfo = ({todo, setShowTodoInfo, editTodos, getTodos, currentTodolist, deleteTodo}) => {
     
     const [disabled, setDisabled] = useState(true)
     const [todoName, setTodoName] = useState(todo.todo)
     const [newtodo, setNewTodo] = useState(todo.todo)
     const date= new Date(todo.createdAt);
-    let dateFormat =  date.toDateString() + ", " + date.getHours() + ":" + date.getMinutes();
+    let minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+    let dateFormat =  date.toDateString() + ", " + date.getHours() + ":" + minutes;
     return (
         <div className="todo-modal" onClick={() => setShowTodoInfo(false)}>
             <div className="todo-modal-content" onClick={(e) => e.stopPropagation()}>
                 <div className="todo-modal-container">
-                    <div>
-                        Created by: {todo.createdBy}
+                    <div className="todoData">
+                        <span style={{fontStyle: 'italic'}}>Created by:</span> {todo.createdBy}
                     </div>
-                    <div>
+                    <div className="todoData">
                         {dateFormat}
                     </div>
-
-                    <input value={todoName} onChange={(e) => setTodoName(e.target.value)} disabled={disabled}/>
-                    {
-                        disabled ? 
-                        <button onClick={() => setDisabled(false)}>Edit</button> 
-
-                        : 
-                        <div>
-                            <button onClick={() => {
-                                setDisabled(true)
-                            }}>Save</button>
-                            <button onClick={() => {
-                                    setTodoName(todo.todo)
-                                    setDisabled(true)
-
-                                }}>Cancel</button>
-                        </div>
+                    <div className="todoInputBtns">
+                        <input className="todoInput" value={todoName} onChange={(e) => setTodoName(e.target.value)} disabled={disabled}/>
+                        {
+                            disabled ? 
+                            <button onClick={() => setDisabled(false)} style={{backgroundColor: 'transparent', border: 'none', cursor: 'pointer'}}>Edit</button> 
+                            : 
+                            <span style={{display: 'flex', alignItems: 'center'}}>
+                                <button  style={{border: 'none', backgroundColor: 'transparent', borderRadius: '5px', marginRight: '5px'}}
+                                    onClick={() => {
+                                        if(todoName !== newtodo){
+                                            editTodos(todo.id, todoName)
+                                            setNewTodo(todoName)
+                                            getTodos(currentTodolist)
+                                        }
+                                        setDisabled(true)
+                                }}><img src={check} width={18}/></button>
+                                <button style={{border: 'none', backgroundColor: 'red', borderRadius: '5px', color: 'white', marginRight: '5px'}}
+                                    onClick={() => {
+                                        setTodoName(todo.todo)
+                                        setDisabled(true)
+                                    }}>X</button>
+                            </span>
+                            
+                        }
                         
-                    }
-                    <div>
-                        <button>Delete</button>
                     </div>
+                    
+                    
+                    <button className="todoDeleteBtn"
+                    onClick={() => {
+                        deleteTodo(todo.id)
+                        setShowTodoInfo(false)
+                    }}>Delete</button>
                     
                     
                 </div>

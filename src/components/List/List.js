@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import './List.css'
-import cancel from '../../assets/multiply.png'
-import edit from '../../assets/edit.png'
-import accept from '../../assets/accept.png'
+import preferences from '../../assets/preferences.png'
 import TodoItemInfo from '../TodoItemInfo/TodoItemInfo'
 
-function List({todo, changeStatus}) {
+function List({todo, changeStatus, editTodos, getTodos, currentTodolist, deleteTodo}) {
   // const [disabled, setDisabled] = useState(true)
   // const [newtodo, setNewTodo] = useState(todo.todo)
   const [showTodoInfo, setShowTodoInfo] = useState(false);
-
   return (
     <div className='listContainer'>
       <div style={{
@@ -29,10 +26,10 @@ function List({todo, changeStatus}) {
             {todo.todo}
           
           </label>
-          <label className="editBtn" onClick={() => setShowTodoInfo(true)}>
-              <img src={edit} width={16} alt='edit icon'/>
+          <label className="prefBtn" onClick={() => setShowTodoInfo(true)}>
+              <img src={preferences} width={16} alt='edit icon'/>
           </label>
-          {showTodoInfo ? <TodoItemInfo todo={todo} setShowTodoInfo={setShowTodoInfo}/> : ''}
+          {showTodoInfo ? <TodoItemInfo todo={todo} setShowTodoInfo={setShowTodoInfo} editTodos={editTodos} getTodos={getTodos} currentTodolist={currentTodolist} deleteTodo={deleteTodo}/> : ''}
           
          
       </div>

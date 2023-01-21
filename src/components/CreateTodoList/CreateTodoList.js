@@ -1,6 +1,5 @@
-import { async } from "@firebase/util";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import React from "react";
 import { db } from "../../firebase";
 import './CreateTodoList.css';
 
@@ -11,9 +10,7 @@ function CreateTodoList({user, todolist, setTodolist, todolistName, setTodolistN
     createdAt: Date.now(),
     createdBy: user.uid,
     name: todolistName,
-    todos: [],
-    users: [user.uid],
-    updatedAt: Date.now()
+    users: [user.uid]
   }
   const createTodolist = async (e) => {
     e.preventDefault();

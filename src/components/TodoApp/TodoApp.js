@@ -15,6 +15,7 @@ const TodoApp = ({signOut, user,isCreateTodolist, setIsCreateTodolist}) => {
   const [todolist, setTodolist] = useState([]);
   const [currentTodolist, setCL] = useState([]);
   const [todolistName, setTodolistName] = useState('');
+  const [todos, setTodos] = useState([])
   // const [todo, setTodo] = useState([])
   let tempArray = [];
   const [users, setUsers] = useState([]);
@@ -22,40 +23,40 @@ const TodoApp = ({signOut, user,isCreateTodolist, setIsCreateTodolist}) => {
   const [isActiveModalTodo, setIsActiveModalTodo] = useState(false)
   const [isActiveModalUsers, setIsActiveModalUsers] = useState(false)
   
-  // const getTodo = async () => {
-  //   const data = await getDocs(collection(db, 'todolists'));
-  //   setTodo(data.docs.map(doc => ({
-  //         ...doc.data(), id: doc.id
-  //         })).filter(el => el.uid === user.uid))
-  // }
+  
   const getTodolist = async () => {
     const data = await getDocs(collection(db, 'todolists'));
     tempArray.push(...data.docs.map(doc => ({
           ...doc.data(), id: doc.id
-          })).filter(el => el.users.indexOf(user.uid) > -1))
+          })))
     setTodolist( tempArray)
+  }
+  const deleteTodo = async (id) => {
+    const newtodos = todos.filter((item) => {
+      return item.id !== id;
+    })
+    setTodos(newtodos);
+    const todoDoc = doc(db, 'todos', id);
+    await deleteDoc(todoDoc).catch(err => console.log(err));
     
   }
-  // const deleteTodo = async (id) => {
-  //   const newtodos = todo.filter((item) => {
-  //     return item.id !== id;
-  //   })
-  //   setTodo(newtodos);
-  //   const todoDoc = doc(db, 'todos', id);
-  //   await deleteDoc(todoDoc).catch(err => console.log(err));
-    
-  // }
-  // const editTodo = async (id, newtodo) => {
-  //   const todoDoc = doc(db, 'todos', id);
-  //   await updateDoc(todoDoc, {todo: newtodo})
-  // }
+  const editTodos = async (id, newtodo) => {
+    const todoDoc = doc(db, 'todos', id);
+    await updateDoc(todoDoc, {todo: newtodo})
+  }
+  const getTodos = async (currentlist) => {
+    const data = await getDocs(collection(db, 'todos'));
+    setTodos(data.docs.map(doc => ({
+        ...doc.data()
+        })).filter(el => el.todolist === currentlist.id))
+  }
   const changeStatus = async (item) => {
-    let updIndex = currentTodolist.todos.findIndex((obj) => obj.id === item.id);
-    currentTodolist.todos[updIndex].status = !currentTodolist.todos[updIndex].status;
+    let updIndex = todos.findIndex((obj) => obj.id === item.id);
+    todos[updIndex].status = !todos[updIndex].status;
+    setTodos([...todos])
+    const todoDoc = doc(db, 'todos', item.id);
+    await updateDoc(todoDoc, {status: todos[updIndex].status})
     
-    setCL({...currentTodolist, todos: [...currentTodolist.todos]})
-    const todoDoc = doc(db, 'todolists', currentTodolist.id);
-    await updateDoc(todoDoc, {todos: [...currentTodolist.todos]})
   }
   const getUsers = async () => {
     const data = await getDocs(collection(db, 'users'))
@@ -68,24 +69,23 @@ const TodoApp = ({signOut, user,isCreateTodolist, setIsCreateTodolist}) => {
   }
   const getCurrentTodoList = async () => {
       await getDoc(doc(db, 'users', user.uid)).then(doc => {
-        let currentlist = [...tempArray].filter(el => el.id === doc.data().currentlistId);
-        setCL({...currentlist[0]})
+         window.currentlist = [...tempArray].filter(el => el.id === doc.data().currentlistId);
+        setCL({...window.currentlist[0]})
       })
-    
+      getTodos(window.currentlist[0])
+      
   } 
   const setCurrentTodoList = async (id, list) => {
     const userDoc = doc(db, 'users', user.uid);
     await updateDoc(userDoc, {currentlistId: id, currentlist: list})
     let currentlist = [...todolist].filter(el => el.id === id);
     setCL({...currentlist[0]})
+    getTodos(currentlist[0])
   }
   useEffect(() => {
-    getTodolist()
-    // getTodo().catch(err => {
-    //   console.log(err)
-    // })
-    getCurrentTodoList()
-    getUsers()
+    getTodolist();
+    getCurrentTodoList();
+    getUsers();
   }, []);
   return (
     <div className="App-container">
@@ -115,13 +115,13 @@ const TodoApp = ({signOut, user,isCreateTodolist, setIsCreateTodolist}) => {
             
             <button onClick={signOut()} className={'signOut-btn'}>Sign out</button>
           </div>
-          {isActiveModalTodo ? <ModalTodolists setCurrentTodoList={setCurrentTodoList} todolist={todolist} isActiveModalTodo={isActiveModalTodo} setIsActiveModalTodo={setIsActiveModalTodo} setIsCreateTodolist={setIsCreateTodolist}/> : ''}
+          {isActiveModalTodo ? <ModalTodolists setCurrentTodoList={setCurrentTodoList} todolist={todolist} isActiveModalTodo={isActiveModalTodo} setIsActiveModalTodo={setIsActiveModalTodo} setIsCreateTodolist={setIsCreateTodolist} setTodos={setTodos}/> : ''}
           {isActiveModalUsers ? <ModalUsers setCurrentTodoList={setCurrentTodoList} currentTodolist={currentTodolist} todolist={todolist} currentUser={user} setIsActiveModalUsers={setIsActiveModalUsers} users={users} addUser={addUser}/> : ''}
           <br/>
-          <TodoAdd  name={name} setName={setName} user={user} currentTodolist={currentTodolist} setCL={setCL}/>
+          <TodoAdd  name={name} setName={setName} user={user} currentTodolist={currentTodolist} setTodos={setTodos} todos={todos}/>
           <div style={{height: '40vh', overflowY: 'scroll'}}>
             {
-              [...currentTodolist.todos]
+              todos
               .sort((a, b) => b.createdAt - a.createdAt)
               .sort((a, b) => a.status - b.status)
               .map((i) => {
@@ -130,6 +130,10 @@ const TodoApp = ({signOut, user,isCreateTodolist, setIsCreateTodolist}) => {
                       <List
                         todo={i}
                         changeStatus={changeStatus}
+                        editTodos={editTodos}
+                        deleteTodo={deleteTodo}
+                        getTodos={getTodos}
+                        currentTodolist={currentTodolist}
                       />
                     </div>
                 )

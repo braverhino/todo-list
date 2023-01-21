@@ -1,26 +1,26 @@
 import React from "react";
 import { db } from "../../firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import './TodoAdd.css';
 
-function TodoAdd({getTodo, name, setName, user, currentTodolist, setCL, todos}) {
-  const todoDoc = doc(db, 'todolists', currentTodolist.id)
-  let todoid = user.uid + Date.now()
+function TodoAdd({name, setName, user, currentTodolist, setTodos, todos}) {
+  let todoid = currentTodolist.id + Date.now()
+  const todoDoc = doc(db, 'todos', todoid)
   const handleSubmit = async (event) => {
     event.preventDefault();
     const payload = {
         id: todoid,
         createdAt: Date.now(),
+        todolist: currentTodolist.id,
         todo: name,
         uid: user.uid,
         createdBy: user.email,
         status: false,
     } 
     if(name !== ''){
-      await updateDoc(todoDoc, {...currentTodolist, todos: [...currentTodolist.todos, payload]});
-      setCL({...currentTodolist, todos: [...currentTodolist.todos, payload]})
+      await setDoc(todoDoc, payload);
       setName('');
-      getTodo()
+      setTodos([...todos, payload])
     }
     
   }

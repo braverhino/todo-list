@@ -41,10 +41,11 @@
     color: white;
     cursor: pointer;
 } */
-.editBtn{
+.prefBtn{
     vertical-align: middle;
     position: absolute;
     right: 0;
+    cursor: pointer;
 }
 .checkboxNNN{
     display: none;
