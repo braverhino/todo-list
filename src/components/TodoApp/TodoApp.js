@@ -22,10 +22,11 @@ const TodoApp = ({signOut, user,isCreateTodolist, setIsCreateTodolist}) => {
   const [name, setName] = useState('');
   const [isActiveModalTodo, setIsActiveModalTodo] = useState(false)
   const [isActiveModalUsers, setIsActiveModalUsers] = useState(false)
+  const [listtest, setListTest] = useState([])
   
   
   const getTodolist = async () => {
-    const q =  query(collection(db, "todolists"), where('users', 'array-contains', user.uid));
+    const q = query(collection(db, "todolists"), where('users', 'array-contains', user.uid));
     onSnapshot(q, (snapshot) => {
       snapshot.forEach((userSnapshot) => {
         tempArray.push({...userSnapshot.data()});
@@ -66,6 +67,7 @@ const TodoApp = ({signOut, user,isCreateTodolist, setIsCreateTodolist}) => {
   const getUsers = async () => {
     const data = await getDocs(collection(db, 'users'))
     setUsers(data.docs.map(doc => doc.data()))
+    console.log('users');
   }
   const addUser = async (id) => {
     const userDoc = doc(db, 'todolists', currentTodolist.id);
@@ -73,25 +75,25 @@ const TodoApp = ({signOut, user,isCreateTodolist, setIsCreateTodolist}) => {
     setCL({...currentTodolist, users: [...currentTodolist.users, id]})
   }
   const getCurrentTodoList = async () => {
-      await getDoc(doc(db, 'users', user.uid)).then(doc => {
-         window.currentlist = [...tempArray].filter(el => el.id === doc.data().currentlistId);
-        setCL({...window.currentlist[0]})
-      })
-      getTodos(window.currentlist[0])
-      
+    if(localStorage.getItem('currentlist')){
+      let currentlist = JSON.parse(window.atob(localStorage.getItem('currentlist')))
+      setCL(currentlist)
+      getTodos(currentlist)
+    }else{
+      localStorage.setItem('currentlist', window.btoa(JSON.stringify(todolist)))
+      setCL(todolist[0])
+      getTodos(todolist[0])
+    }
   } 
   const setCurrentTodoList = async (id, list) => {
-    const userDoc = doc(db, 'users', user.uid);
-    await updateDoc(userDoc, {currentlistId: id, currentlist: list})
     let currentlist = [...todolist].filter(el => el.id === id);
     setCL({...currentlist[0]})
     getTodos(currentlist[0])
+    localStorage.setItem('currentlist', window.btoa(JSON.stringify(currentlist[0])))
   }
   useEffect(() => {
-    localStorage.clear()
     getTodolist();
     getCurrentTodoList();
-    getUsers();
   }, []);
   return (
     <div className="App-container">
@@ -115,7 +117,10 @@ const TodoApp = ({signOut, user,isCreateTodolist, setIsCreateTodolist}) => {
             <button className='action-btn' onClick={() => setIsActiveModalTodo(true)}><img src={layers} width={25}/></button>
             {
               currentTodolist.createdBy === user.uid ?
-              <button className='action-btn' onClick={() => setIsActiveModalUsers(true)}><img src={addUserIcon} width={25}/></button>
+              <button className='action-btn' onClick={() => {
+                setIsActiveModalUsers(true);
+                getUsers();
+              }}><img src={addUserIcon} width={25}/></button>
               : ''
             }
             

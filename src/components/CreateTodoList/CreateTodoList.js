@@ -22,6 +22,7 @@ function CreateTodoList({user, todolist, setTodolist, todolistName, setTodolistN
       setTodolistName('')
       setCurrentTodoList(payload)
       setIsCreateTodolist(false)
+      localStorage.setItem('currentlist', window.btoa(JSON.stringify(payload)))
     }
   }
   return (
