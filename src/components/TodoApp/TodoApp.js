@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc, where, query, onSnapshot } from 'firebase/firestore';
 import React, {useEffect, useState} from "react";
 import Header from '../Header/Header';
 import List from '../List/List';
@@ -25,11 +25,13 @@ const TodoApp = ({signOut, user,isCreateTodolist, setIsCreateTodolist}) => {
   
   
   const getTodolist = async () => {
-    const data = await getDocs(collection(db, 'todolists'));
-    tempArray.push(...data.docs.map(doc => ({
-          ...doc.data(), id: doc.id
-          })))
-    setTodolist( tempArray)
+    const q =  query(collection(db, "todolists"), where('users', 'array-contains', user.uid));
+    onSnapshot(q, (snapshot) => {
+      snapshot.forEach((userSnapshot) => {
+        tempArray.push({...userSnapshot.data()});
+      });
+    });
+    setTodolist(tempArray)
   }
   const deleteTodo = async (id) => {
     const newtodos = todos.filter((item) => {
@@ -38,17 +40,20 @@ const TodoApp = ({signOut, user,isCreateTodolist, setIsCreateTodolist}) => {
     setTodos(newtodos);
     const todoDoc = doc(db, 'todos', id);
     await deleteDoc(todoDoc).catch(err => console.log(err));
-    
   }
   const editTodos = async (id, newtodo) => {
     const todoDoc = doc(db, 'todos', id);
     await updateDoc(todoDoc, {todo: newtodo})
   }
-  const getTodos = async (currentlist) => {
-    const data = await getDocs(collection(db, 'todos'));
-    setTodos(data.docs.map(doc => ({
-        ...doc.data()
-        })).filter(el => el.todolist === currentlist.id))
+  const getTodos = (currentlist) => {
+    const q = query(collection(db, 'todos'), where('todolist', '==', currentlist.id));
+    onSnapshot(q, (snapshot) => {
+      let todosArray = [];
+      snapshot.docs.forEach((doc) => {
+         todosArray.push({...doc.data()})
+      })
+      setTodos(todosArray)
+    })
   }
   const changeStatus = async (item) => {
     let updIndex = todos.findIndex((obj) => obj.id === item.id);
@@ -83,6 +88,7 @@ const TodoApp = ({signOut, user,isCreateTodolist, setIsCreateTodolist}) => {
     getTodos(currentlist[0])
   }
   useEffect(() => {
+    localStorage.clear()
     getTodolist();
     getCurrentTodoList();
     getUsers();

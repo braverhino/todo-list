@@ -17,7 +17,8 @@ function List({todo, changeStatus, editTodos, getTodos, currentTodolist, deleteT
           className="checkboxNNN"
           type='checkbox'
           id={todo.id}
-           checked={todo.status ? 'checked' : ''}/>
+          checked={todo.status ? 'checked' : ''}
+          onChange={(e) => {}}/>
         <label
           className="labelNNN"
           for={todo.id}

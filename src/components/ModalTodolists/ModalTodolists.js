@@ -9,6 +9,7 @@ function ModalTodolists({todolist, setIsActiveModalTodo, setCurrentTodoList, set
                 todolist.sort((a, b) => a.updatedBy - b.updatedBy).map(item => {
                   return(
                     <div 
+                    key={item.id}
                     className="todolist-item"
                     onClick={() => {
                       setCurrentTodoList(item.id, item.name)
