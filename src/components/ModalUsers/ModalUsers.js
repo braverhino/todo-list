@@ -3,18 +3,6 @@ import './ModalUsers.css';
 
 function ModalUsers({users, currentTodolist, setIsActiveModalUsers, addUser}) {
   return (
-    /* <select onChange={(e) => {
-            let index = e.target.selectedIndex;
-            setCurrentTodoList(e.target.options[index].getAttribute('data-key'), e.target.value)
-          }}>
-            {
-              todolist.sort((a, b) => a.updatedBy - b.updatedBy).map(list => {
-                return(
-                  <MyList currentTodolist={currentTodolist} list={list}/>
-                )
-              })
-            }
-          </select> */
           <div className="modal" onClick={() => setIsActiveModalUsers(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               {

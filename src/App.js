@@ -38,7 +38,6 @@ function App() {
   const login = async () => {
     if(email != '' && password != ''){
       try{
-        console.log(email, password)
         const currentUser = await signInWithEmailAndPassword(
           auth,
           email,
@@ -55,7 +54,9 @@ function App() {
 
   }
   const signout = async () => {
+    localStorage.removeItem('currentlist')
     await signOut(auth)
+    
   }
 
   return(
@@ -63,7 +64,7 @@ function App() {
       {
         user ? 
           <TodoApp signOut={() => signout} user={user} isCreateTodolist={isCreateTodolist} setIsCreateTodolist={setIsCreateTodolist}/>
-        : 
+        :
           <Login 
             email={email}
             password={password}

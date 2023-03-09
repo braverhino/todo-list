@@ -1,7 +1,7 @@
 import React from "react";
 import './ModalTodolists.css';
 
-function ModalTodolists({todolist, setIsActiveModalTodo, setCurrentTodoList, setIsCreateTodolist, setTodos}) {
+function ModalTodolists({todolist, setIsActiveModalTodo, setCurrentTodoList, setIsCreateTodolist, setTodos, currentTodolist}) {
   return (
           <div className="modal" onClick={() => setIsActiveModalTodo(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -12,10 +12,16 @@ function ModalTodolists({todolist, setIsActiveModalTodo, setCurrentTodoList, set
                     key={item.id}
                     className="todolist-item"
                     onClick={() => {
-                      setCurrentTodoList(item.id, item.name)
-                      setIsActiveModalTodo(false)
+                      if(currentTodolist.id !== item.id){
+                        setCurrentTodoList(item.id)
+                        setIsActiveModalTodo(false)
+                      }
                     }}>
                       {item.name}
+                      {
+                        currentTodolist.id === item.id ? <span className="current">*</span> : ''
+                      }
+                      
                     </div>
                   )
                 })

@@ -3,26 +3,26 @@ import React from "react";
 import { db } from "../../firebase";
 import './CreateTodoList.css';
 
-function CreateTodoList({user, todolist, setTodolist, todolistName, setTodolistName, setCurrentTodoList, setIsCreateTodolist}) {
+function CreateTodoList({user, todolist,  setTodolist, todolistName, setTodolistName, setCurrentTodoList, setIsCreateTodolist}) {
   let listId = user.uid + Date.now()
   let payload = {
     id: listId,
     createdAt: Date.now(),
     createdBy: user.uid,
     name: todolistName,
-    users: [user.uid]
+    users: [user.uid],
   }
+  // 1. New user()
+  // 2. Old user()
   const createTodolist = async (e) => {
     e.preventDefault();
     if(todolistName){
       await setDoc(doc(db, 'todolists', listId), payload)
-      const userDoc = doc(db, 'users', user.uid);
-      await updateDoc(userDoc, {currentlistId: listId, currentlist: todolistName})
-      setTodolist([...todolist, payload])
-      setTodolistName('')
-      setCurrentTodoList(payload)
-      setIsCreateTodolist(false)
-      localStorage.setItem('currentlist', window.btoa(JSON.stringify(payload)))
+      setTodolist([...todolist, payload]) // get todolists and add new one
+      setTodolistName('') // clear input for new todolist
+      setCurrentTodoList(payload) // update currect todo list
+      setIsCreateTodolist(false) //close window for creating
+      localStorage.setItem('currentlist', window.btoa(JSON.stringify(payload))) // add to storage
     }
   }
   return (
